@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React,{ useState } from "react";
 import { View, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 import api from "../services/api";
@@ -6,13 +7,20 @@ import { Button } from "./Button";
 
 export function WeatherSearch () {
 
+    const navigation = useNavigation()
+
     const [city, setCity] = useState('')
 
-    const getWeather = async () => {
-        const response = await api.getWeather(city)
-        console.log(response)
+    const handleSubmit = () => {
+        if(city.trim() !== ''){
+            navigation.navigate('Weather',{city})
+            setCity('')
+        } else {
+            alert('Digite uma cidade')
+        }
+        
     }
-
+    
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Nome da cidade: </Text>
@@ -22,7 +30,7 @@ export function WeatherSearch () {
                 onChangeText={(e)=>setCity(e)}
                 value={city}
             />
-            <TouchableOpacity style={styles.Button} onPress={getWeather}>
+            <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
                 <Text style={{color:'#FFF', fontSize: 15}} >Pesquisar</Text>
             </TouchableOpacity>
         </View>
