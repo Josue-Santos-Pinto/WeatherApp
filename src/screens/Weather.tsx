@@ -7,10 +7,22 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { Entypo } from '@expo/vector-icons'
 import { useNavigation } from "@react-navigation/native";
 import unsplashApi from "../services/unsplashApi";
+import { useQuery } from '@tanstack/react-query'
+import axios from "axios";
 
 interface Params {
     city: string
 }
+
+const WEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather?'
+
+const WEATHER_KEY = '59fb371af4cd2ab9b19d557dc0a1e706'
+
+const CITY_IMG_URL = 'https://api.unsplash.com/search/photos?page=1&'
+
+const CITY_IMG_KEY = 'V0oq38UJUNC7H_Q12YsaXuskaWZuUh1u7Ltq_h_RYbE'
+
+const API_COUNTRY_FLAG = 'https://countryflagsapi.com/png/'
 
 export function Weather (){
 
@@ -19,85 +31,71 @@ export function Weather (){
     const route = useRoute()
     
     const { city } = route.params as Params
-
-    const API_COUNTRY_FLAG = 'https://countryflagsapi.com/png/'
-
-    const [loading, setLoading] = useState(true)
-
-    const [cityName, setCityName] = useState('')
-    const [temp, setTemp] = useState('')
-    const [weather, setWeather] = useState('')
-    const [img, setImg] = useState('')
-    const [countryFlag, setCountryFlag] = useState('')
-    const [humidity, setHumidity] = useState('')
-    const [wind, setWind] = useState('')
-    const [cityImg, setCityImg] = useState('')
-
-    const getWeatherInfo = async () => {
-        const response = await api.getWeather(city)
-        if(response){
-            setCityName(response.name)
-            setTemp(response.main.temp)
-            setWeather(response.weather[0].description)
-            setImg(`http://openweathermap.org/img/wn/${response.weather[0].icon}.png`)
-            setCountryFlag(API_COUNTRY_FLAG + response.sys.country)
-            setHumidity(response.main.humidity)
-            setWind(response.wind.speed)
-            setLoading(false)
-            
-        } 
-        
-    }
-    const getImgOfCity = async () => {
-        const response = await unsplashApi.getCityImg(city)
-             setCityImg(response.results[0].urls.full)         
-    }
-
-    useEffect(()=>{
-        getWeatherInfo()
-        getImgOfCity()
-    },[])
-
-    
-    useEffect(()=>{
-        console.log(cityImg)
-    },[cityImg])
     
 
+    
+
+    const getWeatherInfo = async (city: string) => {
+        let response = await axios.get(`${WEATHER_URL}q=${city}&units=metric&appid=${WEATHER_KEY}&lang=pt_br`)
+        return response.data
+    }
+
+    const getCityImg = async (city: string) => {
+        let response = await axios.get(`${CITY_IMG_URL}query=${city}&client_id=${CITY_IMG_KEY}`)
+        return response.data                
+    }
+
+
+    const weatherReq = useQuery(["weather-data",city], () => getWeatherInfo(city))
+
+    const imgReq = useQuery(["city-data",city], () => getCityImg(city))
+
+    const n = Math.floor(Math.random() * 10)
+
+    if(weatherReq.isError){
+        alert('Houve um erro')
+        navigation.reset({index:1,routes:[{name:'Home'}]})
+    }
+    if(imgReq.isError){
+        alert('Houve um erro')
+        navigation.reset({index:1,routes:[{name:'Home'}]})
+    }
 
     return (
         <View style={styles.container}>
-            {!loading ? 
+            {(!weatherReq.isLoading && !imgReq.isLoading) && (!imgReq.isError && !weatherReq.isError) ? 
             <>
                 <View style={styles.imgCity}>
-                    <Image source={{uri: cityImg}} style={{width: '100%', height: '110%'}} />
+                    {!imgReq.isError &&
+                        <Image source={{uri: imgReq.data.results[n].urls.full}} style={{width: '100%', height: '110%'}} resizeMode='cover' />
+                    }
                 </View>
                 <View style={styles.weatherInfo}>
                     <View style={styles.titleView}>
                         <FontAwesome name='map-marker' size={25} color='#333' style={{marginRight: 10}} />
-                        <Text style={styles.titleText}>{cityName}</Text>
-                        <Image source={{uri: countryFlag}} style={{width: 25, height: 25, marginLeft: 10}} resizeMode='contain' />
+                        <Text style={styles.titleText}>{weatherReq.data.name}</Text>
+                        <Image source={{uri: API_COUNTRY_FLAG + weatherReq.data.sys.country}} style={{width: 25, height: 25, marginLeft: 10}} resizeMode='contain' />
                     </View>
 
-                    <Text style={styles.temp} >{parseInt(temp)} ºC</Text>
+                    <Text style={styles.temp} >{parseInt(weatherReq.data.main.temp)} ºC</Text>
                     
                     <View style={{flexDirection:'row', justifyContent:'center',alignItems:'center'}}>
-                        <Text style={styles.tempInfo}>{weather}</Text>
-                        <Image source={{uri: img}} style={{width: 50, height: 50}} />
+                        <Text style={styles.tempInfo}>{weatherReq.data.weather[0].description}</Text>
+                        <Image source={{uri: `http://openweathermap.org/img/wn/${weatherReq.data.weather[0].icon}.png`}} style={{width: 50, height: 50}} />
                     </View>
                     
 
                     <View style={{flexDirection: 'row', width: '100%', height: 100, justifyContent: 'space-around', marginTop: 30}}>
                         <View style={{flexDirection:'row', justifyContent: 'center', alignItems: 'center'}}>
                             <Entypo name="drop" size={25} color='#333' style={{marginRight: 10}} />
-                            <Text>{humidity}%</Text>
+                            <Text>{weatherReq.data.main.humidity}%</Text>
                         </View>
                         
                         <View style={{width: 1, height: '100%', backgroundColor: '#000' }}></View>
 
                         <View style={{flexDirection:'row', justifyContent: 'center', alignItems: 'center'}}>
                             <FontAwesome5 name="wind" size={25} color='#333' style={{marginRight: 10}} />
-                            <Text>{wind} km/h</Text>
+                            <Text>{weatherReq.data.wind.speed} km/h</Text>
                         </View>
                         
                     </View>

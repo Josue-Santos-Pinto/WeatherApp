@@ -63,13 +63,12 @@ const styles = StyleSheet.create({
         marginRight: 'auto'
     },
     Button: {
-        width: '40%',
+        width: '50%',
         height: 50,
         backgroundColor: '#15a13f',
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: 20,
-        padding: 15,
         borderRadius: 10,
         borderWidth: 2,
         borderColor: '#0acc45',
