@@ -11,6 +11,8 @@ export function WeatherSearch () {
 
     const [city, setCity] = useState('')
 
+    const mainCities = ['Rio de Janeiro','São Paulo', 'Nova Iorque','Tokyo']
+
     const handleSubmit = () => {
         if(city.trim() !== ''){
             navigation.navigate('Weather',{city})
@@ -20,6 +22,7 @@ export function WeatherSearch () {
         }
         
     }
+    
     
     return (
         <View style={styles.container}>
@@ -33,6 +36,11 @@ export function WeatherSearch () {
             <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
                 <Text style={{color:'#FFF', fontSize: 15}} >Pesquisar</Text>
             </TouchableOpacity>
+            <View style={styles.mainCitiesButtons}>
+                {mainCities.map((city,index)=>(
+                    <Button key={index} city={city}  activeOpacity={0.7} />
+                ))}
+            </View>
         </View>
     )
 }
@@ -65,14 +73,18 @@ const styles = StyleSheet.create({
     Button: {
         width: '50%',
         height: 50,
-        backgroundColor: '#15a13f',
+        backgroundColor: '#00B37E',
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: 20,
         borderRadius: 10,
-        borderWidth: 2,
-        borderColor: '#0acc45',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    mainCitiesButtons: {
+        flex: 1,
+        flexDirection:'row',
+        flexWrap:'wrap',
+        marginTop: 15
     }
 })

@@ -1,30 +1,36 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 
 interface ButtonProps extends TouchableOpacityProps {
-    text: string
+    city: string
 }
 
-export function Button ({text}:ButtonProps) {
+
+export function Button ({city}:ButtonProps) {
+    const navigation = useNavigation()
+
+    const handleSubmitButtons = (city: string) => {
+        navigation.navigate('Weather',{city})
+    }
+
     return (
-        <TouchableOpacity style={styles.Button}>
-            <Text style={styles.text}>{text}</Text>
+        <TouchableOpacity style={styles.Button} onPress={()=>handleSubmitButtons(city)}>
+            <Text style={styles.text}>{city}</Text>
         </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
     Button: {
-        width: '40%',
+        width: '60%',
         height: 50,
-        backgroundColor: '#15a13f',
+        backgroundColor: '#996DFF',
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: 20,
         padding: 15,
         borderRadius: 10,
-        borderWidth: 2,
-        borderColor: '#0acc45',
         justifyContent: 'center',
         alignItems: 'center'
     },
