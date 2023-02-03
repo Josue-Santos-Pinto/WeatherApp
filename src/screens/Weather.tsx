@@ -1,12 +1,10 @@
 import React,{useEffect, useState} from "react";
 import {View, StyleSheet, Text, Image, ActivityIndicator} from 'react-native'
 import { useRoute } from '@react-navigation/native'
-import api from "../services/api";
 import { FontAwesome } from '@expo/vector-icons'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { Entypo } from '@expo/vector-icons'
 import { useNavigation } from "@react-navigation/native";
-import unsplashApi from "../services/unsplashApi";
 import { useQuery } from '@tanstack/react-query'
 import axios from "axios";
 
