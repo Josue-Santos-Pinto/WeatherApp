@@ -6,6 +6,7 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { Entypo } from '@expo/vector-icons'
 import { useNavigation } from "@react-navigation/native";
 import { useQuery } from '@tanstack/react-query'
+import { CITY_IMG_KEY, WEATHER_KEY} from '../keys'
 import axios from "axios";
 
 interface Params {
@@ -14,11 +15,11 @@ interface Params {
 
 const WEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather?'
 
-const WEATHER_KEY = '59fb371af4cd2ab9b19d557dc0a1e706'
+
 
 const CITY_IMG_URL = 'https://api.unsplash.com/search/photos?page=1&'
 
-const CITY_IMG_KEY = 'V0oq38UJUNC7H_Q12YsaXuskaWZuUh1u7Ltq_h_RYbE'
+
 
 const API_COUNTRY_FLAG = 'https://countryflagsapi.com/png/'
 
