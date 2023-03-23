@@ -17,3 +17,8 @@ _Axios_,
 _RestAPI_,
 _UnsplashAPI_,
 _OpenWeatherAPI_
+
+| Tela    | Foto                                      |
+| ------- | ----------------------------------------- |
+| Search  | ![search](/README%20assets/search.jpeg)   |
+| Weather | ![weather](/README%20assets/weather.jpeg) |
