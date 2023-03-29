@@ -20,5 +20,5 @@ _OpenWeatherAPI_
 
 | Tela    | Foto                                      |
 | ------- | ----------------------------------------- |
-| Search  | ![search](/README%20assets/search.jpeg)   |
+| Search  | ![search](/README%20assets/search.jpg)    |
 | Weather | ![weather](/README%20assets/weather.jpeg) |
